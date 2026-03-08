@@ -6,6 +6,7 @@
 // 2026-03-07  Initial version
 // 2026-03-07  Fix: extras empty well shows background color with 1px border
 // 2026-03-07  Fix: extra tile drag uses finger offset
+// 2026-03-07  Fix: reverse snapback animation direction
 // =============================================================================
 
 // =============================================================================
@@ -396,11 +397,11 @@ function drawDraggingTile() {
 
   if (extraDrag.snapback) {
     // Interpolate tile top-left from release position back to origin
+    // t goes 1 → 0 as snapFrame counts down, so lerp moves fingerX → startScreenX
     let t = extraDrag.snapFrame / SNAPBACK_FRAMES;
-    t = 1 - t; // goes from 1 → 0 as snapFrame decreases
     x = lerp(extraDrag.startScreenX, extraDrag.fingerX, t);
     y = lerp(extraDrag.startScreenY, extraDrag.fingerY, t);
-    extraDrag.snapFrame--;
+    extraDrag.snapFrame--;  // decrement after using current frame
     if (extraDrag.snapFrame <= 0) {
       extraDrag = null;
       needsRedraw = true;
