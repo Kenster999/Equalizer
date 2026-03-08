@@ -180,8 +180,8 @@ function computeLayout() {
 
   // Scoring area
   let scoringX = W - scoringW - AREA_MARGIN;
-  let scoringY = extrasH;
-  let scoringH = mainH;
+  let scoringY = 0;
+  let scoringH = H;
 
   L = {
     tileSize,
