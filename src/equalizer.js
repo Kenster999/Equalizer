@@ -7,6 +7,7 @@
 // 2026-03-07  Fix: extras empty well shows background color with 1px border
 // 2026-03-07  Fix: extra tile drag uses finger offset
 // 2026-03-07  Fix: reverse snapback animation direction
+// 2026-03-07  Fix: tile green shading only on valid equations
 // =============================================================================
 
 // =============================================================================
@@ -544,9 +545,11 @@ function commitSelection() {
   let valid = isValidEquation(normalized);
   let pts = valid ? cells.length * cells.length : 0;
 
-  // Increment useCount for each cell
-  for (let c of cells) {
-    grid[c.row][c.col].useCount++;
+  // Only increment useCount on valid equations (drives green shading)
+  if (valid) {
+    for (let c of cells) {
+      grid[c.row][c.col].useCount++;
+    }
   }
 
   scores.push({
