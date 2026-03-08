@@ -5,6 +5,7 @@
 // MODIFICATIONS:
 // 2026-03-07  Initial version
 // 2026-03-07  Fix: extras empty well shows background color with 1px border
+// 2026-03-07  Fix: extra tile drag uses finger offset
 // =============================================================================
 
 // =============================================================================
@@ -106,8 +107,9 @@ let extraDrag = null;
 // {
 //   srcRow, srcCol,       — origin in extras grid
 //   value,                — tile value
-//   fingerX, fingerY,     — current finger position
-//   startScreenX,         — center of origin tile (for snapback)
+//   fingerX, fingerY,     — tile top-left position (finger minus offset)
+//   offsetX, offsetY,     — finger position relative to tile top-left at drag start
+//   startScreenX,         — tile top-left of origin (for snapback destination)
 //   startScreenY,
 //   snapback: bool,
 //   snapFrame: int
@@ -393,7 +395,7 @@ function drawDraggingTile() {
   let x, y;
 
   if (extraDrag.snapback) {
-    // Interpolate from current position back to start
+    // Interpolate tile top-left from release position back to origin
     let t = extraDrag.snapFrame / SNAPBACK_FRAMES;
     t = 1 - t; // goes from 1 → 0 as snapFrame decreases
     x = lerp(extraDrag.startScreenX, extraDrag.fingerX, t);
@@ -405,21 +407,22 @@ function drawDraggingTile() {
       return;
     }
   } else {
+    // fingerX/Y is already the tile top-left (finger minus offset)
     x = extraDrag.fingerX;
     y = extraDrag.fingerY;
   }
 
-  // Draw centered on finger
+  // Draw tile at top-left (x, y)
   fill(TILE_BG_DEFAULT);
   stroke(TILE_BORDER_COLOR);
   strokeWeight(TILE_BORDER_WIDTH + 1);
-  rect(x - ts/2, y - ts/2, ts, ts, TILE_CORNER_RADIUS);
+  rect(x, y, ts, ts, TILE_CORNER_RADIUS);
   fill(TILE_TEXT_COLOR);
   noStroke();
   textAlign(CENTER, CENTER);
   textSize(ts * TILE_TEXT_SIZE_RATIO);
   textStyle(BOLD);
-  text(extraDrag.value, x, y);
+  text(extraDrag.value, x + ts / 2, y + ts / 2);
 }
 
 // =============================================================================
@@ -431,16 +434,18 @@ function mousePressed() {
   let ec = extrasCell(mouseX, mouseY);
   if (ec && !extras[ec.row][ec.col].used) {
     let pos = extrasTilePos(ec.row, ec.col);
-    let cx = pos.x + L.tileSize / 2;
-    let cy = pos.y + L.tileSize / 2;
+    let offsetX = mouseX - pos.x;
+    let offsetY = mouseY - pos.y;
     extraDrag = {
       srcRow: ec.row,
       srcCol: ec.col,
       value: extras[ec.row][ec.col].value,
-      fingerX: mouseX,
-      fingerY: mouseY,
-      startScreenX: cx,
-      startScreenY: cy,
+      fingerX: pos.x,         // tile top-left: starts at origin
+      fingerY: pos.y,
+      offsetX,                // finger offset from tile top-left
+      offsetY,
+      startScreenX: pos.x,    // origin top-left (snapback destination)
+      startScreenY: pos.y,
       snapback: false,
       snapFrame: 0,
     };
@@ -459,8 +464,8 @@ function mousePressed() {
 
 function mouseDragged() {
   if (extraDrag && !extraDrag.snapback) {
-    extraDrag.fingerX = mouseX;
-    extraDrag.fingerY = mouseY;
+    extraDrag.fingerX = mouseX - extraDrag.offsetX;
+    extraDrag.fingerY = mouseY - extraDrag.offsetY;
     return;
   }
 
@@ -496,9 +501,9 @@ function mouseReleased() {
       // Invalid drop — snapback
       extraDrag.snapback = true;
       extraDrag.snapFrame = SNAPBACK_FRAMES;
-      // Store current finger position as start of snapback
-      extraDrag.fingerX = mouseX;
-      extraDrag.fingerY = mouseY;
+      // Store visual tile top-left at release as snapback start
+      extraDrag.fingerX = mouseX - extraDrag.offsetX;
+      extraDrag.fingerY = mouseY - extraDrag.offsetY;
     }
     return;
   }
