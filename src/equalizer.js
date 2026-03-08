@@ -4,6 +4,7 @@
 //
 // MODIFICATIONS:
 // 2026-03-07  Initial version
+// 2026-03-07  Fix: extras empty well shows background color with 1px border
 // =============================================================================
 
 // =============================================================================
@@ -266,9 +267,9 @@ function drawExtrasArea(g) {
       let isDragging = extraDrag && extraDrag.srcRow === r && extraDrag.srcCol === c;
 
       if (tile.used || isDragging) {
-        // Empty well: black square
-        g.fill(EXTRA_WELL_COLOR);
-        g.stroke(EXTRA_WELL_COLOR);
+        // Empty well: area background color with 1px black border
+        g.fill(AREA_BG_COLOR);
+        g.stroke(TILE_BORDER_COLOR);
         g.strokeWeight(TILE_BORDER_WIDTH);
         g.rect(pos.x, pos.y, L.tileSize, L.tileSize, TILE_CORNER_RADIUS);
       } else {
