@@ -8,6 +8,7 @@
 // 2026-03-07  Fix: extra tile drag uses finger offset
 // 2026-03-07  Fix: reverse snapback animation direction
 // 2026-03-07  Fix: tile green shading only on valid equations
+// 2026-03-09  Fix: recompute validUseCount on re-evaluation; rename useCount to validUseCount
 // =============================================================================
 
 // =============================================================================
@@ -88,7 +89,7 @@ let L = {};
 let staticCanvas;  // redrawn only on state change
 let needsRedraw = true;
 
-// Main grid: grid[row][col] = { value: str, useCount: int }
+// Main grid: grid[row][col] = { value: str, validUseCount: int }
 let grid = [];
 
 // Extras: extras[row][col] = { value: str, used: bool }
@@ -211,7 +212,7 @@ function initGame() {
   for (let r = 0; r < ROWS; r++) {
     grid[r] = [];
     for (let c = 0; c < COLS; c++) {
-      grid[r][c] = { value: randomTile(), useCount: 0 };
+      grid[r][c] = { value: randomTile(), validUseCount: 0 };
     }
   }
 
@@ -302,18 +303,18 @@ function drawMainArea(g) {
     for (let c = 0; c < COLS; c++) {
       let pos = mainTilePos(r, c);
       let tile = grid[r][c];
-      drawTileAt(g, pos.x, pos.y, tile.value, tile.useCount, true);
+      drawTileAt(g, pos.x, pos.y, tile.value, tile.validUseCount, true);
     }
   }
 }
 
 // --- DRAW A SINGLE TILE ---
-function drawTileAt(g, x, y, value, useCount, showGreen) {
+function drawTileAt(g, x, y, value, validUseCount, showGreen) {
   let ts = L.tileSize;
   let bgColor = TILE_BG_DEFAULT;
 
-  if (showGreen && useCount > 0) {
-    let t = min(TILE_USED_TINT_START + (useCount - 1) * TILE_USED_TINT_STEP, TILE_USED_TINT_MAX);
+  if (showGreen && validUseCount > 0) {
+    let t = min(TILE_USED_TINT_START + (validUseCount - 1) * TILE_USED_TINT_STEP, TILE_USED_TINT_MAX);
     bgColor = lerpColor(color(TILE_BG_DEFAULT), color(TILE_USED_GREEN), t);
   }
 
@@ -492,7 +493,7 @@ function mouseReleased() {
       // Valid drop — replace tile
       let oldValue = grid[mc.row][mc.col].value;
       grid[mc.row][mc.col].value = extraDrag.value;
-      grid[mc.row][mc.col].useCount = 0;
+      grid[mc.row][mc.col].validUseCount = 0;
       extras[extraDrag.srcRow][extraDrag.srcCol].used = true;
       extraDrag = null;
 
@@ -545,13 +546,6 @@ function commitSelection() {
   let valid = isValidEquation(normalized);
   let pts = valid ? cells.length * cells.length : 0;
 
-  // Only increment useCount on valid equations (drives green shading)
-  if (valid) {
-    for (let c of cells) {
-      grid[c.row][c.col].useCount++;
-    }
-  }
-
   scores.push({
     startRow: selStartCell.row,
     startCol: selStartCell.col,
@@ -563,6 +557,7 @@ function commitSelection() {
     valid,
   });
 
+  recomputeValidUseCounts();
   totalPoints += pts;
   needsRedraw = true;
 }
@@ -587,6 +582,28 @@ function reEvaluateScoresAt(row, col) {
     }
 
     totalPoints += entry.points;
+  }
+  recomputeValidUseCounts();
+}
+
+function recomputeValidUseCounts() {
+  // Zero out all tile validUseCount values
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      grid[r][c].validUseCount = 0;
+    }
+  }
+  // For each valid score entry, increment validUseCount for every tile in its range
+  for (let entry of scores) {
+    if (entry.valid) {
+      let cells = cellsInRange(
+        { row: entry.startRow, col: entry.startCol },
+        { row: entry.endRow,   col: entry.endCol }
+      );
+      for (let cell of cells) {
+        grid[cell.row][cell.col].validUseCount++;
+      }
+    }
   }
 }
 

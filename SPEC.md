@@ -46,6 +46,13 @@ gets progressively greener:
 - Maximum: TILE_USED_TINT_MAX (e.g. 80%)
 All three values are constants.
 
+Green shading reflects only **valid** equation uses (validUseCount).
+When an extra tile is dropped onto the grid and triggers re-evaluation,
+validUseCount is fully recomputed from scratch across all score entries:
+equations that become invalid lose their green contribution; equations
+that become valid gain it. This ensures shading always matches current
+equation validity.
+
 ## Extras Tiles
 - 13 types: digits 0–9, plus +, −, =
 - 2 rows (identical tile types in each row)
