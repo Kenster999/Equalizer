@@ -9,6 +9,11 @@ Runtime: p5.js on OpenProcessing (browser-based, no build step)
 - `src/equalizer.js` — the entire game (single file)
 - `SPEC.md` — full game design specification
 - `CLAUDE.md` — this file
+- `docs/file-index.md` — jsDelivr/raw URLs for all key files; paste at start of each Chat session
+
+## File Index Maintenance
+- `docs/file-index.md` must be kept up to date at all times
+- Whenever a file is added, removed, or renamed, update `docs/file-index.md` in the same commit
 
 ## Standing Instructions
 - Always commit directly to main, no PRs needed
