@@ -6,6 +6,22 @@
 - **Cannot push directly to `main`** — the git proxy only allows pushing to `claude/` branches (403 otherwise)
 - **No `GITHUB_TOKEN` in environment by default**
 
+## Reading This File in a Claude Chat Session
+
+`raw.githubusercontent.com` and `api.github.com` are NOT in Claude chat's `web_fetch` allowlist.
+Use the **jsDelivr CDN** instead — it mirrors GitHub and is typically accessible:
+
+```
+https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/github-in-claude-web.md
+```
+
+General pattern:
+```
+https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path/to/file>
+```
+
+> Note: jsDelivr caches aggressively. After a commit, append `?v=<timestamp>` to bust the cache if needed.
+
 ## How Git Works Here
 
 The local git remote points to a proxy at `http://local_proxy@127.0.0.1:45677/git/<owner>/<repo>`, which forwards to Anthropic's session ingress, which forwards to GitHub. This only supports git protocol (fetch/push), **not** the GitHub REST API.
