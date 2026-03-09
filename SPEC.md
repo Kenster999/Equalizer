@@ -94,7 +94,7 @@ Evaluation rules:
 - Both sides evaluated as standard arithmetic (+ and − only)
 - Handles leading + (e.g. +5=5)
 - Handles leading − / negative numbers (e.g. -0+1=1)
-- Handles double negatives (e.g. 1--2=3)
+- Consecutive signs collapsed before evaluation: -- → +, +- → -, -+ → - (e.g. 1--2=3)
 - Leading zeros treated as decimal, not octal (e.g. 09+1=10)
 - Mathematically accurate
 

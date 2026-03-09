@@ -11,6 +11,7 @@
 // 2026-03-09  Fix: recompute validUseCount on re-evaluation; rename useCount to validUseCount
 // 2026-03-09  Fix: cellsInRange always iterates left-to-right or top-to-bottom regardless of drag direction
 // 2026-03-09  Fix: replace safeEval with eval()-based implementation; handles leading +, double negatives, leading zeros
+// 2026-03-09  Fix: collapse consecutive signs (--,+-,-+) before eval to handle double negatives
 // =============================================================================
 
 // =============================================================================
@@ -631,9 +632,21 @@ function isValidEquation(expr) {
   return lVal === rVal;
 }
 
+function collapseSigns(expr) {
+  let prev;
+  do {
+    prev = expr;
+    expr = expr.replace(/--/g, '+')
+               .replace(/\+-/g, '-')
+               .replace(/-\+/g, '-');
+  } while (expr !== prev);
+  return expr;
+}
+
 function safeEval(expr) {
   // Whitelist: only digits, +, and - allowed
   if (!/^[0-9+\-]+$/.test(expr)) return null;
+  expr = collapseSigns(expr);
   try {
     let result = eval(expr);
     if (typeof result !== 'number' || !isFinite(result)) return null;
