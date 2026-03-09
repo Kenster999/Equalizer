@@ -6,10 +6,12 @@
 - **Cannot push directly to `main`** — the git proxy only allows pushing to `claude/` branches (403 otherwise)
 - **No `GITHUB_TOKEN` in environment by default**
 
-## Reading This File in a Claude Chat Session
+## Reading Files in a Claude Chat Session
 
-`raw.githubusercontent.com` and `api.github.com` are NOT in Claude chat's `web_fetch` allowlist.
-Use the **jsDelivr CDN** instead — it mirrors GitHub and is typically accessible:
+`raw.githubusercontent.com` and `api.github.com` are NOT accessible from Claude Chat (the web/mobile chat interface) regardless of PAT.
+
+### For Markdown files
+Use jsDelivr — it mirrors GitHub and is accessible from Claude Chat, but only if the user pastes the URL directly into the conversation:
 
 ```
 https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/github-in-claude-web.md
@@ -21,6 +23,21 @@ https://cdn.jsdelivr.net/gh/<owner>/<repo>@<branch>/<path/to/file>
 ```
 
 > Note: jsDelivr caches aggressively. After a commit, append `?v=<timestamp>` to bust the cache if needed.
+
+### For JavaScript (and other non-Markdown) files
+jsDelivr returns binary for JS files — it does NOT work. Use `raw.githubusercontent.com` instead:
+
+```
+https://raw.githubusercontent.com/Kenster999/Equalizer/main/src/equalizer.js
+```
+
+**Important:** Claude Chat cannot self-generate and fetch URLs unprompted. The URL must be pasted directly into the conversation by the user before Claude Chat can fetch it.
+
+### Recommended session startup
+Paste the URL for `docs/file-index.md` at the start of each Chat session. Claude Chat can fetch it, and all other file URLs listed there become available for fetching in that session.
+
+### Claude Code sessions
+In Claude Code sessions, `curl` + PAT against `api.github.com` works fine — use the normal workflow described below.
 
 ## How Git Works Here
 
