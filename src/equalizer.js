@@ -10,6 +10,7 @@
 // 2026-03-07  Fix: tile green shading only on valid equations
 // 2026-03-09  Fix: recompute validUseCount on re-evaluation; rename useCount to validUseCount
 // 2026-03-09  Fix: cellsInRange always iterates left-to-right or top-to-bottom regardless of drag direction
+// 2026-03-09  Fix: replace safeEval with eval()-based implementation; handles leading +, double negatives, leading zeros
 // =============================================================================
 
 // =============================================================================
@@ -631,40 +632,12 @@ function isValidEquation(expr) {
 }
 
 function safeEval(expr) {
-  // Allow digits, +, - only
+  // Whitelist: only digits, +, and - allowed
   if (!/^[0-9+\-]+$/.test(expr)) return null;
-  // Must start with digit or minus (negative number)
-  if (!/^-?[0-9]/.test(expr)) return null;
-  // Must end with digit
-  if (!/[0-9]$/.test(expr)) return null;
-
-  // Tokenize: split on + and - while preserving signs
-  // Handle cases like 1--2, -0+1, etc.
   try {
-    // Replace -- with + (double negative), but do it via proper parsing
-    let tokens = [];
-    let i = 0;
-    let current = '';
-
-    while (i < expr.length) {
-      let ch = expr[i];
-      if ((ch === '+' || ch === '-') && current !== '') {
-        tokens.push(current);
-        current = ch;
-      } else {
-        current += ch;
-      }
-      i++;
-    }
-    if (current !== '') tokens.push(current);
-
-    let total = 0;
-    for (let t of tokens) {
-      let n = parseInt(t, 10);
-      if (isNaN(n)) return null;
-      total += n;
-    }
-    return total;
+    let result = eval(expr);
+    if (typeof result !== 'number' || !isFinite(result)) return null;
+    return result;
   } catch(e) {
     return null;
   }

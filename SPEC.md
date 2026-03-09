@@ -92,8 +92,10 @@ Before evaluation, normalize the raw tile string:
 Evaluation rules:
 - Must contain exactly one = after normalization
 - Both sides evaluated as standard arithmetic (+ and − only)
-- Handles negative numbers (e.g. -0+1=1)
+- Handles leading + (e.g. +5=5)
+- Handles leading − / negative numbers (e.g. -0+1=1)
 - Handles double negatives (e.g. 1--2=3)
+- Leading zeros treated as decimal, not octal (e.g. 09+1=10)
 - Mathematically accurate
 
 ## Scoring
