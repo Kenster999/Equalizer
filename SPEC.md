@@ -81,6 +81,10 @@ Random, weighted toward digits for solvability:
 - Yellow outline disappears on finger lift regardless of outcome
 
 ## Equation Evaluation
+Tile order is always left-to-right (horizontal) or top-to-bottom (vertical),
+regardless of which direction the player dragged. The equation string is built
+from the lesser to greater row/col index.
+
 Before evaluation, normalize the raw tile string:
 - Collapse consecutive = signs into one (e.g. "3==3" → "3=3")
 - No other normalization

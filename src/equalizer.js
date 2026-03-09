@@ -9,6 +9,7 @@
 // 2026-03-07  Fix: reverse snapback animation direction
 // 2026-03-07  Fix: tile green shading only on valid equations
 // 2026-03-09  Fix: recompute validUseCount on re-evaluation; rename useCount to validUseCount
+// 2026-03-09  Fix: cellsInRange always iterates left-to-right or top-to-bottom regardless of drag direction
 // =============================================================================
 
 // =============================================================================
@@ -713,14 +714,17 @@ function mainCell(mx, my) {
 
 function cellsInRange(start, end) {
   let cells = [];
-  let rStep = start.row === end.row ? 0 : (end.row > start.row ? 1 : -1);
-  let cStep = start.col === end.col ? 0 : (end.col > start.col ? 1 : -1);
-  let r = start.row, c = start.col;
-  while (r !== end.row || c !== end.col) {
-    cells.push({ row: r, col: c });
-    r += rStep;
-    c += cStep;
+  let r0 = min(start.row, end.row);
+  let r1 = max(start.row, end.row);
+  let c0 = min(start.col, end.col);
+  let c1 = max(start.col, end.col);
+
+  if (r0 === r1) {
+    // Horizontal
+    for (let c = c0; c <= c1; c++) cells.push({ row: r0, col: c });
+  } else {
+    // Vertical
+    for (let r = r0; r <= r1; r++) cells.push({ row: r, col: c0 });
   }
-  cells.push({ row: end.row, col: end.col });
   return cells;
 }
