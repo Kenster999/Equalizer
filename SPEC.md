@@ -78,8 +78,11 @@ Random, weighted toward digits for solvability:
   last valid cell, outline remains visible
 - Commit: finger lifts INSIDE a main area tile → evaluate and record
 - Cancel: finger lifts OUTSIDE main area → selection silently discarded
+- Selection range is normalized to ascending row/col before comparison and storage
 - If the normalized equation does not contain exactly one =, the selection
   is silently discarded (not recorded, not scored)
+- If the same normalized range has already been recorded, the selection is
+  silently discarded (duplicate detection)
 - Yellow outline disappears on finger lift regardless of outcome
 
 ## Equation Evaluation

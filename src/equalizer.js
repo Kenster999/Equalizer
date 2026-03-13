@@ -14,6 +14,7 @@
 // 2026-03-09  Fix: collapse consecutive signs (--,+-,-+) before eval to handle double negatives
 // 2026-03-13  Responsive layout: continuous scaling of tile size, gap, and margins from available space
 // 2026-03-13  Scoring list oldest-first; silently discard selections without exactly one =
+// 2026-03-13  Silently discard duplicate selection ranges
 // =============================================================================
 
 // =============================================================================
@@ -561,7 +562,17 @@ function touchEnded()   { mouseReleased(); return false; }
 // =============================================================================
 
 function commitSelection() {
-  let cells = cellsInRange(selStartCell, selEndCell);
+  // Normalize range to ascending row/col
+  let normStart = { row: min(selStartCell.row, selEndCell.row), col: min(selStartCell.col, selEndCell.col) };
+  let normEnd   = { row: max(selStartCell.row, selEndCell.row), col: max(selStartCell.col, selEndCell.col) };
+
+  // Silently discard duplicate ranges
+  if (scores.some(e =>
+    e.startRow === normStart.row && e.startCol === normStart.col &&
+    e.endRow   === normEnd.row   && e.endCol   === normEnd.col
+  )) return;
+
+  let cells = cellsInRange(normStart, normEnd);
   let raw = cells.map(c => grid[c.row][c.col].value).join('');
   let display = raw;
   let normalized = normalizeEquation(raw);
@@ -571,10 +582,10 @@ function commitSelection() {
   let pts = valid ? cells.length * cells.length : 0;
 
   scores.push({
-    startRow: selStartCell.row,
-    startCol: selStartCell.col,
-    endRow:   selEndCell.row,
-    endCol:   selEndCell.col,
+    startRow: normStart.row,
+    startCol: normStart.col,
+    endRow:   normEnd.row,
+    endCol:   normEnd.col,
     raw,
     display,
     points: pts,
