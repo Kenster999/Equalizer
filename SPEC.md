@@ -132,9 +132,13 @@ When an extra tile is dropped onto a main area tile:
 ## Responsive Layout
 - All dimensions derived from windowWidth / windowHeight
 - p5's windowResized() triggers recompute and redraw
-- Scoring area: fixed width, does not grow
-- Main area gets priority for available space
+- Tile size, gap, and margin are all computed continuously from available space — no fixed breakpoints
+- Gap = tileSize × TILE_GAP_RATIO, rounded to nearest even integer
+- Margin = tileSize × MARGIN_RATIO, rounded to nearest integer
+- Scoring area width = max(SCORING_MIN_WIDTH, floor(W × SCORING_WIDTH_RATIO))
+- Tile size is the smaller of the width constraint (fit 13 extras columns) and height constraint (fit 9 rows)
 - Minimum tile size enforced (MIN_TILE_SIZE constant)
+- Scoring entry font size and row height also scale with tileSize (stored in L.entryFontSize / L.entryHeight)
 
 ## Performance
 - Two-layer rendering:

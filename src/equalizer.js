@@ -12,6 +12,7 @@
 // 2026-03-09  Fix: cellsInRange always iterates left-to-right or top-to-bottom regardless of drag direction
 // 2026-03-09  Fix: replace safeEval with eval()-based implementation; handles leading +, double negatives, leading zeros
 // 2026-03-09  Fix: collapse consecutive signs (--,+-,-+) before eval to handle double negatives
+// 2026-03-13  Responsive layout: continuous scaling of tile size, gap, and margins from available space
 // =============================================================================
 
 // =============================================================================
@@ -55,17 +56,16 @@ const DIVIDER_COLOR           = '#888888';
 const DIVIDER_DASH_ON         = 6;
 const DIVIDER_DASH_OFF        = 4;
 
-// Layout sizing
-const TILE_GAP                = 8;   // gap between tiles (fits selection outline)
-const AREA_MARGIN             = 16;  // outer margin
-const SCORING_MIN_WIDTH       = 160; // enough for 10-char eq + 4-digit score
+// Layout sizing — gap and margin are computed from tileSize in computeLayout()
+const TILE_GAP_RATIO          = 0.20; // gap = tileSize × ratio, rounded to nearest even int
+const MARGIN_RATIO            = 0.30; // margin = tileSize × ratio, rounded to nearest int
+const SCORING_WIDTH_RATIO     = 0.18; // scoring area width as fraction of canvas width
+const SCORING_MIN_WIDTH       = 100;  // floor for scoring area width
 const EXTRAS_ROWS             = 2;
-const MIN_TILE_SIZE           = 28;
+const MIN_TILE_SIZE           = 16;
 
-// Scoring area
+// Scoring area — entry font/height are computed in computeLayout() as L.entryFontSize / L.entryHeight
 const SCORE_TOTAL_FONT_RATIO  = 0.18; // fraction of scoring width
-const SCORE_ENTRY_FONT_SIZE   = 13;
-const SCORE_ENTRY_HEIGHT      = 22;
 const SCORE_PADDING           = 10;
 
 // Snap-back animation
@@ -160,49 +160,68 @@ function computeLayout() {
   let W = width;
   let H = height;
 
-  // Scoring area fixed width
-  let scoringW = max(SCORING_MIN_WIDTH, floor(W * 0.18));
+  // Scoring area width
+  let scoringW = max(SCORING_MIN_WIDTH, floor(W * SCORING_WIDTH_RATIO));
 
-  // Available width for extras + main
-  let availW = W - scoringW - AREA_MARGIN * 3; // left margin, between, right margin
+  // --- Width constraint: fit EXTRA_COLS=13 columns (the wider area) ---
+  // Exact: tileSize*(EXTRA_COLS + (EXTRA_COLS-1)*TILE_GAP_RATIO + 2*MARGIN_RATIO) = W - scoringW
+  // One-pass: estimate tileSize, derive margin, recompute availW
+  let tileSizeEstW = (W - scoringW) / (EXTRA_COLS + (EXTRA_COLS - 1) * TILE_GAP_RATIO + 2 * MARGIN_RATIO);
+  let marginEstW   = round(tileSizeEstW * MARGIN_RATIO);
+  let availW       = W - scoringW - 2 * marginEstW;
+  let tileSizeFromWidth = availW / (EXTRA_COLS + (EXTRA_COLS - 1) * TILE_GAP_RATIO);
 
-  // Tile size: fit the wider of extras (13 cols) or main (10 cols) into availW
-  // Extras needs 13 tiles + 12 gaps + 2*margin
-  // We use availW directly since extras spans full left portion
-  let tileFromExtras = floor((availW - (EXTRA_COLS - 1) * TILE_GAP) / EXTRA_COLS);
-  let tileSize = max(MIN_TILE_SIZE, tileFromExtras);
+  // --- Height constraint: fit EXTRAS_ROWS+ROWS=9 rows with 8 gaps + 3 margins ---
+  // 3 margins: top, bottom, and divider gap between areas
+  let totalRows = EXTRAS_ROWS + ROWS;   // 9
+  let totalGaps = totalRows - 1;        // 8
+  let tileSizeEstH = H / (totalRows + totalGaps * TILE_GAP_RATIO + 3 * MARGIN_RATIO);
+  let marginEstH   = round(tileSizeEstH * MARGIN_RATIO);
+  let availH       = H - 3 * marginEstH;
+  let tileSizeFromHeight = availH / (totalRows + totalGaps * TILE_GAP_RATIO);
+
+  // Final tile size: smaller of the two constraints, floored, min enforced
+  let tileSize = max(MIN_TILE_SIZE, floor(min(tileSizeFromWidth, tileSizeFromHeight)));
+
+  // Derived spacing from final tileSize
+  let gap    = round(tileSize * TILE_GAP_RATIO / 2) * 2; // nearest even integer
+  let margin = round(tileSize * MARGIN_RATIO);
+
+  // Recompute availW with final margin
+  availW = W - scoringW - 2 * margin;
 
   // Heights
-  let extrasH = EXTRAS_ROWS * tileSize + (EXTRAS_ROWS - 1) * TILE_GAP + AREA_MARGIN * 2;
-  let mainH   = ROWS * tileSize + (ROWS - 1) * TILE_GAP + AREA_MARGIN * 2;
+  let extrasH = EXTRAS_ROWS * tileSize + (EXTRAS_ROWS - 1) * gap + 2 * margin;
+  let mainH   = ROWS * tileSize + (ROWS - 1) * gap + 2 * margin;
   let dividerY = extrasH;
 
-  // Extras area
-  let extrasAreaW = availW + AREA_MARGIN * 2; // left + right margin for this area
-  let extrasTotalTilesW = EXTRA_COLS * tileSize + (EXTRA_COLS - 1) * TILE_GAP;
-  let extrasOffsetX = AREA_MARGIN + floor((availW - extrasTotalTilesW) / 2);
+  // Tile area widths
+  let extrasTotalTilesW = EXTRA_COLS * tileSize + (EXTRA_COLS - 1) * gap;
+  let mainTotalTilesW   = COLS * tileSize + (COLS - 1) * gap;
 
-  // Main area (centered within same availW)
-  let mainTotalTilesW = COLS * tileSize + (COLS - 1) * TILE_GAP;
-  let mainOffsetX = AREA_MARGIN + floor((availW - mainTotalTilesW) / 2);
-  let mainOffsetY = extrasH + AREA_MARGIN;
+  // Offsets: center tile blocks within availW
+  let extrasOffsetX = margin + floor((availW - extrasTotalTilesW) / 2);
+  let mainOffsetX   = margin + floor((availW - mainTotalTilesW) / 2);
+  let mainOffsetY   = extrasH + margin;
 
   // Scoring area
-  let scoringX = W - scoringW - AREA_MARGIN;
+  let scoringX = W - scoringW - margin;
   let scoringY = 0;
   let scoringH = H;
 
+  // Responsive scoring entry sizes
+  let entryFontSize = max(9, floor(tileSize * 0.55));
+  let entryHeight   = max(14, floor(entryFontSize * 1.6));
+
   L = {
-    tileSize,
-    scoringW,
-    scoringX, scoringY, scoringH,
-    extrasH,
-    dividerY,
+    tileSize, gap, margin,
+    scoringW, scoringX, scoringY, scoringH,
+    extrasH, dividerY,
     extrasOffsetX,
     mainOffsetX, mainOffsetY,
-    mainTotalTilesW,
-    mainH,
+    mainTotalTilesW, mainH,
     availW,
+    entryFontSize, entryHeight,
   };
 }
 
@@ -264,7 +283,7 @@ function drawStatic() {
 function drawExtrasArea(g) {
   g.fill(AREA_BG_COLOR);
   g.noStroke();
-  g.rect(0, 0, width - L.scoringW - AREA_MARGIN, L.extrasH);
+  g.rect(0, 0, width - L.scoringW - L.margin, L.extrasH);
 
   for (let r = 0; r < EXTRAS_ROWS; r++) {
     for (let c = 0; c < EXTRA_COLS; c++) {
@@ -292,7 +311,7 @@ function drawDivider(g) {
   g.stroke(DIVIDER_COLOR);
   g.strokeWeight(1);
   g.drawingContext.setLineDash([DIVIDER_DASH_ON, DIVIDER_DASH_OFF]);
-  g.line(0, L.dividerY, width - L.scoringW - AREA_MARGIN, L.dividerY);
+  g.line(0, L.dividerY, width - L.scoringW - L.margin, L.dividerY);
   g.drawingContext.setLineDash([]);
 }
 
@@ -300,7 +319,7 @@ function drawDivider(g) {
 function drawMainArea(g) {
   g.fill(AREA_BG_COLOR);
   g.noStroke();
-  g.rect(0, L.mainOffsetY - AREA_MARGIN, width - L.scoringW - AREA_MARGIN, L.mainH);
+  g.rect(0, L.mainOffsetY - L.margin, width - L.scoringW - L.margin, L.mainH);
 
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -340,7 +359,7 @@ function drawScoringArea(g) {
 
   g.fill(SCORING_BG_COLOR);
   g.noStroke();
-  g.rect(scoringX, 0, scoringW + AREA_MARGIN, height);
+  g.rect(scoringX, 0, scoringW + L.margin, height);
 
   // TOTAL label
   let totalFontSize = max(16, floor(scoringW * SCORE_TOTAL_FONT_RATIO));
@@ -355,13 +374,13 @@ function drawScoringArea(g) {
 
   // Entries
   let entryStartY = scoringY + SCORE_PADDING + totalFontSize * 2.6 + 8;
-  g.textSize(SCORE_ENTRY_FONT_SIZE);
+  g.textSize(L.entryFontSize);
   g.textStyle(NORMAL);
 
   for (let i = scores.length - 1; i >= 0; i--) {
     let entry = scores[i];
-    let ey = entryStartY + (scores.length - 1 - i) * SCORE_ENTRY_HEIGHT;
-    if (ey + SCORE_ENTRY_HEIGHT > scoringY + scoringH) break;
+    let ey = entryStartY + (scores.length - 1 - i) * L.entryHeight;
+    if (ey + L.entryHeight > scoringY + scoringH) break;
 
     g.fill(entry.valid ? SCORE_VALID_COLOR : SCORE_INVALID_COLOR);
     g.textAlign(LEFT, TOP);
@@ -381,7 +400,7 @@ function drawSelectionOutline() {
   let start = mainTilePos(selStartCell.row, selStartCell.col);
   let end   = mainTilePos(selEndCell.row, selEndCell.col);
   let ts = L.tileSize;
-  let halfGap = TILE_GAP / 2;
+  let halfGap = L.gap / 2;
 
   let x1 = min(start.x, end.x) - halfGap;
   let y1 = min(start.y, end.y) - halfGap;
@@ -661,14 +680,14 @@ function safeEval(expr) {
 // =============================================================================
 
 function extrasTilePos(row, col) {
-  let x = L.extrasOffsetX + col * (L.tileSize + TILE_GAP);
-  let y = AREA_MARGIN + row * (L.tileSize + TILE_GAP);
+  let x = L.extrasOffsetX + col * (L.tileSize + L.gap);
+  let y = L.margin + row * (L.tileSize + L.gap);
   return { x, y };
 }
 
 function mainTilePos(row, col) {
-  let x = L.mainOffsetX + col * (L.tileSize + TILE_GAP);
-  let y = L.mainOffsetY + row * (L.tileSize + TILE_GAP);
+  let x = L.mainOffsetX + col * (L.tileSize + L.gap);
+  let y = L.mainOffsetY + row * (L.tileSize + L.gap);
   return { x, y };
 }
 
