@@ -13,6 +13,7 @@
 // 2026-03-09  Fix: replace safeEval with eval()-based implementation; handles leading +, double negatives, leading zeros
 // 2026-03-09  Fix: collapse consecutive signs (--,+-,-+) before eval to handle double negatives
 // 2026-03-13  Responsive layout: continuous scaling of tile size, gap, and margins from available space
+// 2026-03-13  Scoring list oldest-first; silently discard selections without exactly one =
 // =============================================================================
 
 // =============================================================================
@@ -377,10 +378,9 @@ function drawScoringArea(g) {
   g.textSize(L.entryFontSize);
   g.textStyle(NORMAL);
 
-  for (let i = scores.length - 1; i >= 0; i--) {
+  for (let i = 0; i < scores.length; i++) {
     let entry = scores[i];
-    let ey = entryStartY + (scores.length - 1 - i) * L.entryHeight;
-    if (ey + L.entryHeight > scoringY + scoringH) break;
+    let ey = entryStartY + i * L.entryHeight;
 
     g.fill(entry.valid ? SCORE_VALID_COLOR : SCORE_INVALID_COLOR);
     g.textAlign(LEFT, TOP);
@@ -565,6 +565,8 @@ function commitSelection() {
   let raw = cells.map(c => grid[c.row][c.col].value).join('');
   let display = raw;
   let normalized = normalizeEquation(raw);
+  // Silently discard if not exactly one '='
+  if ((normalized.match(/=/g) || []).length !== 1) return;
   let valid = isValidEquation(normalized);
   let pts = valid ? cells.length * cells.length : 0;
 

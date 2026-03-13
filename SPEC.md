@@ -78,6 +78,8 @@ Random, weighted toward digits for solvability:
   last valid cell, outline remains visible
 - Commit: finger lifts INSIDE a main area tile → evaluate and record
 - Cancel: finger lifts OUTSIDE main area → selection silently discarded
+- If the normalized equation does not contain exactly one =, the selection
+  is silently discarded (not recorded, not scored)
 - Yellow outline disappears on finger lift regardless of outcome
 
 ## Equation Evaluation
@@ -114,7 +116,7 @@ When an extra tile is dropped onto a main area tile:
 
 ## Scoring Area Display
 - "TOTAL:" label at top in large font, followed by total points
-- List of all selections below, most recent first
+- List of all selections below, oldest first (top) to newest (bottom)
 - Each entry shows: equation string (raw, as selected) and point value
 - Invalid/zero entries displayed in a distinct color (constant: SCORE_INVALID_COLOR)
 - Valid entries in standard color (constant: SCORE_VALID_COLOR)
