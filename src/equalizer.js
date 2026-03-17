@@ -15,6 +15,7 @@
 // 2026-03-13  Responsive layout: continuous scaling of tile size, gap, and margins from available space
 // 2026-03-13  Scoring list oldest-first; silently discard selections without exactly one =
 // 2026-03-13  Silently discard duplicate selection ranges
+// 2026-03-17  Exclude = from first and last columns of main grid at init
 // =============================================================================
 
 // =============================================================================
@@ -236,7 +237,8 @@ function initGame() {
   for (let r = 0; r < ROWS; r++) {
     grid[r] = [];
     for (let c = 0; c < COLS; c++) {
-      grid[r][c] = { value: randomTile(), validUseCount: 0 };
+      let allowEquals = (c !== 0 && c !== COLS - 1);
+      grid[r][c] = { value: randomTile(allowEquals), validUseCount: 0 };
     }
   }
 
@@ -258,11 +260,15 @@ function initGame() {
   needsRedraw = true;
 }
 
-function randomTile() {
-  let r = random();
+function randomTile(allowEquals = true) {
+  let weightEquals = allowEquals ? (1 - TILE_WEIGHT_DIGIT - TILE_WEIGHT_PLUS - TILE_WEIGHT_MINUS) : 0;
+  let total = TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS + TILE_WEIGHT_MINUS + weightEquals;
+  let r = random() * total;
   if (r < TILE_WEIGHT_DIGIT) return str(floor(random(10)));
-  if (r < TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS) return '+';
-  if (r < TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS + TILE_WEIGHT_MINUS) return '-';
+  r -= TILE_WEIGHT_DIGIT;
+  if (r < TILE_WEIGHT_PLUS) return '+';
+  r -= TILE_WEIGHT_PLUS;
+  if (r < TILE_WEIGHT_MINUS) return '-';
   return '=';
 }
 
