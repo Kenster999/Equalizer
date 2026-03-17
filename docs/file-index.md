@@ -15,6 +15,7 @@ https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/file-index.md
 | `CLAUDE.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/CLAUDE.md` | — |
 | `docs/github-in-claude-web.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/github-in-claude-web.md` | — |
 | `docs/file-index.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/file-index.md` | — |
+| `docs/screenshots/` | *(directory)* | `https://raw.githubusercontent.com/Kenster999/Equalizer/main/docs/screenshots/<filename>` |
 
 ## Notes
 - jsDelivr works for Markdown in Claude Chat sessions (URL must be pasted by user)
