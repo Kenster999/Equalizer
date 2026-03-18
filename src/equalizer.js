@@ -17,6 +17,7 @@
 // 2026-03-13  Silently discard duplicate selection ranges
 // 2026-03-17  Exclude = from first and last columns of main grid at init
 // 2026-03-17  Add docs/screenshots directory
+// 2026-03-18  Rename scoring sizing screenshot to 2026-03-18-01a-ScoringSizingBad.jpeg
 // =============================================================================
 
 // =============================================================================

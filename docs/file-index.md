@@ -18,9 +18,9 @@ https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/file-index.md
 
 ## Screenshots
 
-| Directory | Access |
-|-----------|--------|
-| `docs/screenshots/` | Images accessed via `https://raw.githubusercontent.com/Kenster999/Equalizer/main/docs/screenshots/<filename>` |
+| File | jsDelivr URL | Raw URL |
+|------|-------------|---------|
+| `docs/screenshots/2026-03-18-01a-ScoringSizingBad.jpeg` | *(binary — use raw)* | `https://raw.githubusercontent.com/Kenster999/Equalizer/main/docs/screenshots/2026-03-18-01a-ScoringSizingBad.jpeg` |
 
 ## Notes
 - jsDelivr works for Markdown in Claude Chat sessions (URL must be pasted by user)
