@@ -16,6 +16,7 @@
 // 2026-03-13  Scoring list oldest-first; silently discard selections without exactly one =
 // 2026-03-13  Silently discard duplicate selection ranges
 // 2026-03-17  Exclude = from first and last columns of main grid at init
+// 2026-03-17  Add docs/screenshots directory
 // =============================================================================
 
 // =============================================================================
