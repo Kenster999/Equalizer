@@ -22,6 +22,7 @@
 // 2026-03-19  Fix green shading correctness; bold Total line
 // 2026-03-19  Added coding-standards.md; updated CLAUDE.md and file-index.md
 // 2026-03-19  Added coding standards rules 5 and 6 to coding-standards.md
+// 2026-03-19  Conform to coding standards rules 1, 2, and 5
 // =============================================================================
 
 // =============================================================================
@@ -144,6 +145,7 @@ function setup() {
   initGame();
 }
 
+
 function draw() {
   if (needsRedraw) {
     drawStatic();
@@ -156,6 +158,7 @@ function draw() {
   drawSelectionOutline();
   drawDraggingTile();
 }
+
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -271,15 +274,16 @@ function initGame() {
   needsRedraw = true;
 }
 
+
 function randomTile(allowEquals = true) {
   let weightEquals = allowEquals ? (1 - TILE_WEIGHT_DIGIT - TILE_WEIGHT_PLUS - TILE_WEIGHT_MINUS) : 0;
   let total = TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS + TILE_WEIGHT_MINUS + weightEquals;
   let r = random() * total;
-  if (r < TILE_WEIGHT_DIGIT) return str(floor(random(10)));
+  if (r < TILE_WEIGHT_DIGIT) { return str(floor(random(10))); }
   r -= TILE_WEIGHT_DIGIT;
-  if (r < TILE_WEIGHT_PLUS) return '+';
+  if (r < TILE_WEIGHT_PLUS) { return '+'; }
   r -= TILE_WEIGHT_PLUS;
-  if (r < TILE_WEIGHT_MINUS) return '-';
+  if (r < TILE_WEIGHT_MINUS) { return '-'; }
   return '=';
 }
 
@@ -297,6 +301,7 @@ function drawStatic() {
   drawMainArea(g);
   drawScoringArea(g);
 }
+
 
 // --- EXTRAS AREA ---
 function drawExtrasArea(g) {
@@ -325,6 +330,7 @@ function drawExtrasArea(g) {
   }
 }
 
+
 // --- DASHED DIVIDER ---
 function drawDivider(g) {
   g.stroke(DIVIDER_COLOR);
@@ -333,6 +339,7 @@ function drawDivider(g) {
   g.line(0, L.dividerY, width - L.scoringW - L.margin, L.dividerY);
   g.drawingContext.setLineDash([]);
 }
+
 
 // --- MAIN AREA ---
 function drawMainArea(g) {
@@ -348,6 +355,7 @@ function drawMainArea(g) {
     }
   }
 }
+
 
 // --- DRAW A SINGLE TILE ---
 function drawTileAt(g, x, y, value, validUseCount, showGreen) {
@@ -371,6 +379,7 @@ function drawTileAt(g, x, y, value, validUseCount, showGreen) {
   g.textStyle(BOLD);
   g.text(value, x + ts / 2, y + ts / 2);
 }
+
 
 // --- SCORING AREA ---
 function drawScoringArea(g) {
@@ -412,7 +421,7 @@ function drawScoringArea(g) {
 // =============================================================================
 
 function drawSelectionOutline() {
-  if (!selActive || !selStartCell || !selEndCell) return;
+  if (!selActive || !selStartCell || !selEndCell) { return; }
 
   let start = mainTilePos(selStartCell.row, selStartCell.col);
   let end   = mainTilePos(selEndCell.row, selEndCell.col);
@@ -430,8 +439,9 @@ function drawSelectionOutline() {
   rect(x1, y1, x2 - x1, y2 - y1, TILE_CORNER_RADIUS);
 }
 
+
 function drawDraggingTile() {
-  if (!extraDrag) return;
+  if (!extraDrag) { return; }
 
   let ts = L.tileSize;
   let x, y;
@@ -504,6 +514,7 @@ function mousePressed() {
   }
 }
 
+
 function mouseDragged() {
   if (extraDrag && !extraDrag.snapback) {
     extraDrag.fingerX = mouseX - extraDrag.offsetX;
@@ -511,7 +522,7 @@ function mouseDragged() {
     return;
   }
 
-  if (!selActive || !selStartCell) return;
+  if (!selActive || !selStartCell) { return; }
   let mc = mainCell(mouseX, mouseY);
   if (mc) {
     // Only extend if same axis
@@ -523,6 +534,7 @@ function mouseDragged() {
     // If diagonal, keep last valid selEndCell
   }
 }
+
 
 function mouseReleased() {
   // Handle extra tile drop
@@ -568,9 +580,14 @@ function mouseReleased() {
   selEndCell = null;
 }
 
+
 // Touch support
 function touchStarted() { mousePressed(); return false; }
+
+
 function touchMoved()   { mouseDragged(); return false; }
+
+
 function touchEnded()   { mouseReleased(); return false; }
 
 // =============================================================================
@@ -586,14 +603,14 @@ function commitSelection() {
   if (scores.some(e =>
     e.startRow === normStart.row && e.startCol === normStart.col &&
     e.endRow   === normEnd.row   && e.endCol   === normEnd.col
-  )) return;
+  )) { return; }
 
   let cells = cellsInRange(normStart, normEnd);
   let raw = cells.map(c => grid[c.row][c.col].value).join('');
   let display = raw;
   let normalized = normalizeEquation(raw);
   // Silently discard if not exactly one '='
-  if ((normalized.match(/=/g) || []).length !== 1) return;
+  if ((normalized.match(/=/g) || []).length !== 1) { return; }
   let valid = isValidEquation(normalized);
   let pts = valid ? cells.length * cells.length : 0;
 
@@ -612,6 +629,7 @@ function commitSelection() {
   totalPoints += pts;
   needsRedraw = true;
 }
+
 
 function reEvaluateScoresAt(row, col) {
   totalPoints = 0;
@@ -636,6 +654,7 @@ function reEvaluateScoresAt(row, col) {
   }
   recomputeValidUseCounts();
 }
+
 
 function recomputeValidUseCounts() {
   // Reset all tile validUseCount to 0
@@ -667,18 +686,20 @@ function normalizeEquation(expr) {
   return expr.replace(/=+/g, '=');
 }
 
+
 function isValidEquation(expr) {
   // Must contain exactly one '='
   let parts = expr.split('=');
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) { return false; }
   let [left, right] = parts;
-  if (!left || !right) return false;
+  if (!left || !right) { return false; }
 
   let lVal = safeEval(left);
   let rVal = safeEval(right);
-  if (lVal === null || rVal === null) return false;
+  if (lVal === null || rVal === null) { return false; }
   return lVal === rVal;
 }
+
 
 function collapseSigns(expr) {
   let prev;
@@ -691,13 +712,14 @@ function collapseSigns(expr) {
   return expr;
 }
 
+
 function safeEval(expr) {
   // Whitelist: only digits, +, and - allowed
-  if (!/^[0-9+\-]+$/.test(expr)) return null;
+  if (!/^[0-9+\-]+$/.test(expr)) { return null; }
   expr = collapseSigns(expr);
   try {
     let result = eval(expr);
-    if (typeof result !== 'number' || !isFinite(result)) return null;
+    if (typeof result !== 'number' || !isFinite(result)) { return null; }
     return result;
   } catch(e) {
     return null;
@@ -714,11 +736,13 @@ function extrasTilePos(row, col) {
   return { x, y };
 }
 
+
 function mainTilePos(row, col) {
   let x = L.mainOffsetX + col * (L.tileSize + L.gap);
   let y = L.mainOffsetY + row * (L.tileSize + L.gap);
   return { x, y };
 }
+
 
 function extrasCell(mx, my) {
   for (let r = 0; r < EXTRAS_ROWS; r++) {
@@ -733,6 +757,7 @@ function extrasCell(mx, my) {
   return null;
 }
 
+
 function mainCell(mx, my) {
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -745,6 +770,7 @@ function mainCell(mx, my) {
   }
   return null;
 }
+
 
 function cellsInRange(start, end) {
   let cells = [];
@@ -762,3 +788,5 @@ function cellsInRange(start, end) {
   }
   return cells;
 }
+
+
