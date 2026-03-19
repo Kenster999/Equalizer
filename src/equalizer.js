@@ -18,6 +18,7 @@
 // 2026-03-17  Exclude = from first and last columns of main grid at init
 // 2026-03-17  Add docs/screenshots directory
 // 2026-03-18  Rename scoring sizing screenshot to 2026-03-18-01a-ScoringSizingBad.jpeg
+// 2026-03-19  Scoring area: proportional font sizing, single-line Total, left/right alignment, thousands separators
 // =============================================================================
 
 // =============================================================================
@@ -69,9 +70,12 @@ const SCORING_MIN_WIDTH       = 100;  // floor for scoring area width
 const EXTRAS_ROWS             = 2;
 const MIN_TILE_SIZE           = 16;
 
-// Scoring area — entry font/height are computed in computeLayout() as L.entryFontSize / L.entryHeight
-const SCORE_TOTAL_FONT_RATIO  = 0.18; // fraction of scoring width
-const SCORE_PADDING           = 10;
+// Scoring area — all font sizes and heights computed in computeLayout()
+const SCORE_TOTAL_FONT_RATIO       = 1.2;  // totalFontSize = entryFontSize × this ratio
+const SCORE_ENTRY_CHAR_WIDTH_RATIO = 0.6;  // estimated char width as fraction of font size (tuning constant)
+const SCORE_ENTRY_REF_CHARS        = 17;   // widest expected entry line: "0000000000  9,999"
+const SCORE_TOTAL_REF_CHARS        = 13;   // widest expected total line: "Total: 99,999"
+const SCORE_PADDING                = 10;
 
 // Snap-back animation
 const SNAPBACK_FRAMES         = 20;
@@ -214,9 +218,11 @@ function computeLayout() {
   let scoringY = 0;
   let scoringH = H;
 
-  // Responsive scoring entry sizes
-  let entryFontSize = max(9, floor(tileSize * 0.55));
-  let entryHeight   = max(14, floor(entryFontSize * 1.6));
+  // Scoring font sizes: compute entryFontSize to fit reference string in usable width
+  let usableW = scoringW - SCORE_PADDING * 2;
+  let entryFontSize = usableW / (SCORE_ENTRY_REF_CHARS * SCORE_ENTRY_CHAR_WIDTH_RATIO);
+  let totalFontSize = entryFontSize * SCORE_TOTAL_FONT_RATIO;
+  let entryHeight = entryFontSize * 1.6;
 
   L = {
     tileSize, gap, margin,
@@ -226,7 +232,7 @@ function computeLayout() {
     mainOffsetX, mainOffsetY,
     mainTotalTilesW, mainH,
     availW,
-    entryFontSize, entryHeight,
+    entryFontSize, totalFontSize, entryHeight,
   };
 }
 
@@ -371,19 +377,18 @@ function drawScoringArea(g) {
   g.noStroke();
   g.rect(scoringX, 0, scoringW + L.margin, height);
 
-  // TOTAL label
-  let totalFontSize = max(16, floor(scoringW * SCORE_TOTAL_FONT_RATIO));
+  // Total line: label left-aligned, value right-aligned
   g.fill(TILE_TEXT_COLOR);
   g.noStroke();
+  g.textStyle(NORMAL);
+  g.textSize(L.totalFontSize);
   g.textAlign(LEFT, TOP);
-  g.textStyle(BOLD);
-  g.textSize(totalFontSize);
-  g.text('TOTAL:', scoringX + SCORE_PADDING, scoringY + SCORE_PADDING);
-  g.textSize(totalFontSize * 1.4);
-  g.text(totalPoints, scoringX + SCORE_PADDING, scoringY + SCORE_PADDING + totalFontSize + 4);
+  g.text('Total:', scoringX + SCORE_PADDING, scoringY + SCORE_PADDING);
+  g.textAlign(RIGHT, TOP);
+  g.text(totalPoints.toLocaleString(), scoringX + scoringW - SCORE_PADDING, scoringY + SCORE_PADDING);
 
   // Entries
-  let entryStartY = scoringY + SCORE_PADDING + totalFontSize * 2.6 + 8;
+  let entryStartY = scoringY + SCORE_PADDING + L.totalFontSize + L.entryHeight * 0.6;
   g.textSize(L.entryFontSize);
   g.textStyle(NORMAL);
 
@@ -395,7 +400,7 @@ function drawScoringArea(g) {
     g.textAlign(LEFT, TOP);
     g.text(entry.display, scoringX + SCORE_PADDING, ey);
     g.textAlign(RIGHT, TOP);
-    g.text(entry.points, scoringX + scoringW - SCORE_PADDING, ey);
+    g.text(entry.points.toLocaleString(), scoringX + scoringW - SCORE_PADDING, ey);
   }
 }
 

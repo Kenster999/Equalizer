@@ -118,9 +118,12 @@ When an extra tile is dropped onto a main area tile:
 - A previously invalid equation may become valid (score increases)
 
 ## Scoring Area Display
-- "TOTAL:" label at top in large font, followed by total points
+- Single Total line at top: "Total:" left-aligned, total value right-aligned, both at L.totalFontSize, normal weight
+- Total value formatted with thousands separator (toLocaleString())
+- Extra vertical gap below Total line before first entry (entryHeight × 0.6)
 - List of all selections below, oldest first (top) to newest (bottom)
-- Each entry shows: equation string (raw, as selected) and point value
+- Each entry: equation string left-aligned, point value right-aligned, at L.entryFontSize, normal weight
+- Point values formatted with thousands separator (toLocaleString())
 - Invalid/zero entries displayed in a distinct color (constant: SCORE_INVALID_COLOR)
 - Valid entries in standard color (constant: SCORE_VALID_COLOR)
 - Equation string is updated if re-evaluation changes it
