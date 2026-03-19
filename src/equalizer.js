@@ -19,6 +19,7 @@
 // 2026-03-17  Add docs/screenshots directory
 // 2026-03-18  Rename scoring sizing screenshot to 2026-03-18-01a-ScoringSizingBad.jpeg
 // 2026-03-19  Scoring area: proportional font sizing, single-line Total, left/right alignment, thousands separators
+// 2026-03-19  Fix green shading correctness; bold Total line
 // =============================================================================
 
 // =============================================================================
@@ -380,7 +381,7 @@ function drawScoringArea(g) {
   // Total line: label left-aligned, value right-aligned
   g.fill(TILE_TEXT_COLOR);
   g.noStroke();
-  g.textStyle(NORMAL);
+  g.textStyle(BOLD);
   g.textSize(L.totalFontSize);
   g.textAlign(LEFT, TOP);
   g.text('Total:', scoringX + SCORE_PADDING, scoringY + SCORE_PADDING);
@@ -635,13 +636,13 @@ function reEvaluateScoresAt(row, col) {
 }
 
 function recomputeValidUseCounts() {
-  // Zero out all tile validUseCount values
+  // Reset all tile validUseCount to 0
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       grid[r][c].validUseCount = 0;
     }
   }
-  // For each valid score entry, increment validUseCount for every tile in its range
+  // Recount from all valid score entries
   for (let entry of scores) {
     if (entry.valid) {
       let cells = cellsInRange(
