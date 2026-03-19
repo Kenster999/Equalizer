@@ -20,6 +20,7 @@
 // 2026-03-18  Rename scoring sizing screenshot to 2026-03-18-01a-ScoringSizingBad.jpeg
 // 2026-03-19  Scoring area: proportional font sizing, single-line Total, left/right alignment, thousands separators
 // 2026-03-19  Fix green shading correctness; bold Total line
+// 2026-03-19  Added coding-standards.md; updated CLAUDE.md and file-index.md
 // =============================================================================
 
 // =============================================================================

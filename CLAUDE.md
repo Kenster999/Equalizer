@@ -16,6 +16,7 @@ Runtime: p5.js on OpenProcessing (browser-based, no build step)
 - Whenever a file is added, removed, or renamed, update `docs/file-index.md` in the same commit
 
 ## Standing Instructions
+- At the start of each session, read docs/coding-standards.md and apply its standards to all code.
 - Always commit directly to main, no PRs needed
 - Single-file architecture — all code stays in `src/equalizer.js`
 - The GitHub fine-grained access token will be provided at the start of each session

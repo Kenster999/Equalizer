@@ -15,6 +15,7 @@ https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/file-index.md
 | `CLAUDE.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/CLAUDE.md` | — |
 | `docs/github-in-claude-web.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/github-in-claude-web.md` | — |
 | `docs/file-index.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/file-index.md` | — |
+| `docs/coding-standards.md` | `https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/coding-standards.md` | — |
 
 ## Screenshots
 
