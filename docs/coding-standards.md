@@ -25,3 +25,34 @@ function someFunc(a, b)
   // do something
 }  // function someFunc(a, b)
 ```
+
+### 5. Braces for If/Else
+All `if`, `else if`, and `else` blocks must use braces, even if the block contains only one line.
+
+### 6. Code Grouping and Ordering
+Group related code together using comment headers. Within each group:
+- Constants and non-function declarations come first, in alphabetical order where possible
+- Functions follow, in alphabetical order
+
+Put exactly 3 blank lines before each group header comment.
+
+Example:
+```javascript
+}  // function lastFuncInGroup
+
+
+
+// --- Next Group ---
+const SOME_CONSTANT = 1;
+
+function aFunc()
+{
+  // ...
+}  // function aFunc()
+
+
+function bFunc()
+{
+  // ...
+}  // function bFunc()
+```

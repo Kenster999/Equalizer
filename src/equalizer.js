@@ -21,6 +21,7 @@
 // 2026-03-19  Scoring area: proportional font sizing, single-line Total, left/right alignment, thousands separators
 // 2026-03-19  Fix green shading correctness; bold Total line
 // 2026-03-19  Added coding-standards.md; updated CLAUDE.md and file-index.md
+// 2026-03-19  Added coding standards rules 5 and 6 to coding-standards.md
 // =============================================================================
 
 // =============================================================================
