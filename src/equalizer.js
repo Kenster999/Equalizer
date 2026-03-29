@@ -23,6 +23,7 @@
 // 2026-03-19  Added coding-standards.md; updated CLAUDE.md and file-index.md
 // 2026-03-19  Added coding standards rules 5 and 6 to coding-standards.md
 // 2026-03-19  Conform to coding standards rules 1, 2, and 5
+// 2026-03-29  Test commit from macOS Claude app
 // =============================================================================
 
 // =============================================================================
