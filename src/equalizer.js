@@ -415,7 +415,7 @@ function drawScoringArea(g) {
     g.textAlign(RIGHT, TOP);
     g.text(entry.points.toLocaleString(), scoringX + scoringW - SCORE_PADDING, ey);
   }
-}
+}  // function drawScoringArea(g)
 
 // =============================================================================
 // DYNAMIC LAYER
@@ -438,7 +438,7 @@ function drawSelectionOutline() {
   stroke(SELECTION_COLOR);
   strokeWeight(SELECTION_STROKE_WIDTH);
   rect(x1, y1, x2 - x1, y2 - y1, TILE_CORNER_RADIUS);
-}
+}  // function drawSelectionOutline()
 
 
 function drawDraggingTile() {
@@ -476,7 +476,7 @@ function drawDraggingTile() {
   textSize(ts * TILE_TEXT_SIZE_RATIO);
   textStyle(BOLD);
   text(extraDrag.value, x + ts / 2, y + ts / 2);
-}
+}  // function drawDraggingTile()
 
 // =============================================================================
 // INPUT
@@ -513,7 +513,7 @@ function mousePressed() {
     selStartCell = mc;
     selEndCell = mc;
   }
-}
+}  // function mousePressed()
 
 
 function mouseDragged() {
@@ -534,7 +534,7 @@ function mouseDragged() {
     }
     // If diagonal, keep last valid selEndCell
   }
-}
+}  // function mouseDragged()
 
 
 function mouseReleased() {
@@ -579,17 +579,17 @@ function mouseReleased() {
   selActive = false;
   selStartCell = null;
   selEndCell = null;
-}
+}  // function mouseReleased()
 
 
 // Touch support
-function touchStarted() { mousePressed(); return false; }
+function touchStarted() { mousePressed(); return false; }  // function touchStarted()
 
 
-function touchMoved()   { mouseDragged(); return false; }
+function touchMoved()   { mouseDragged(); return false; }  // function touchMoved()
 
 
-function touchEnded()   { mouseReleased(); return false; }
+function touchEnded()   { mouseReleased(); return false; }  // function touchEnded()
 
 // =============================================================================
 // SELECTION & EVALUATION
@@ -629,7 +629,7 @@ function commitSelection() {
   recomputeValidUseCounts();
   totalPoints += pts;
   needsRedraw = true;
-}
+}  // function commitSelection()
 
 
 function reEvaluateScoresAt(row, col) {
@@ -654,7 +654,7 @@ function reEvaluateScoresAt(row, col) {
     totalPoints += entry.points;
   }
   recomputeValidUseCounts();
-}
+}  // function reEvaluateScoresAt(row, col)
 
 
 function recomputeValidUseCounts() {
