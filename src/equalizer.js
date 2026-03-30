@@ -28,6 +28,7 @@
 // 2026-03-29  fix: use raw.githubusercontent.com for all file URLs
 // 2026-03-30  fix: use GitHub Contents API URLs for file-index.md and equalizer.js in Chat session startup
 // 2026-03-30  Add coding standard rule 7 (K&R brace style for if/else)
+// 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 1 of 3
 // =============================================================================
 
 // =============================================================================
@@ -143,7 +144,8 @@ let extraDrag = null;
 // P5 SETUP & DRAW
 // =============================================================================
 
-function setup() {
+function setup()
+{
   createCanvas(windowWidth, windowHeight);
   computeLayout();
   staticCanvas = createGraphics(width, height);
@@ -151,7 +153,8 @@ function setup() {
 }  // function setup()
 
 
-function draw() {
+function draw()
+{
   if (needsRedraw) {
     drawStatic();
     needsRedraw = false;
@@ -165,7 +168,8 @@ function draw() {
 }  // function draw()
 
 
-function windowResized() {
+function windowResized()
+{
   resizeCanvas(windowWidth, windowHeight);
   computeLayout();
   staticCanvas.resizeCanvas(width, height);
@@ -176,7 +180,8 @@ function windowResized() {
 // LAYOUT COMPUTATION
 // =============================================================================
 
-function computeLayout() {
+function computeLayout()
+{
   let W = width;
   let H = height;
 
@@ -251,7 +256,8 @@ function computeLayout() {
 // GAME INIT
 // =============================================================================
 
-function initGame() {
+function initGame()
+{
   grid = [];
   for (let r = 0; r < ROWS; r++) {
     grid[r] = [];
@@ -280,7 +286,8 @@ function initGame() {
 }  // function initGame()
 
 
-function randomTile(allowEquals = true) {
+function randomTile(allowEquals = true)
+{
   let weightEquals = allowEquals ? (1 - TILE_WEIGHT_DIGIT - TILE_WEIGHT_PLUS - TILE_WEIGHT_MINUS) : 0;
   let total = TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS + TILE_WEIGHT_MINUS + weightEquals;
   let r = random() * total;
@@ -296,7 +303,8 @@ function randomTile(allowEquals = true) {
 // STATIC CANVAS DRAW
 // =============================================================================
 
-function drawStatic() {
+function drawStatic()
+{
   let g = staticCanvas;
   g.clear();
   g.background(AREA_BG_COLOR);
@@ -309,7 +317,8 @@ function drawStatic() {
 
 
 // --- EXTRAS AREA ---
-function drawExtrasArea(g) {
+function drawExtrasArea(g)
+{
   g.fill(AREA_BG_COLOR);
   g.noStroke();
   g.rect(0, 0, width - L.scoringW - L.margin, L.extrasH);
@@ -337,7 +346,8 @@ function drawExtrasArea(g) {
 
 
 // --- DASHED DIVIDER ---
-function drawDivider(g) {
+function drawDivider(g)
+{
   g.stroke(DIVIDER_COLOR);
   g.strokeWeight(1);
   g.drawingContext.setLineDash([DIVIDER_DASH_ON, DIVIDER_DASH_OFF]);
@@ -347,7 +357,8 @@ function drawDivider(g) {
 
 
 // --- MAIN AREA ---
-function drawMainArea(g) {
+function drawMainArea(g)
+{
   g.fill(AREA_BG_COLOR);
   g.noStroke();
   g.rect(0, L.mainOffsetY - L.margin, width - L.scoringW - L.margin, L.mainH);
