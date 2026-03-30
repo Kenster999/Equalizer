@@ -34,6 +34,7 @@
 // 2026-03-30  Verify coding standard rule 2 (trailing newlines) — already compliant, no change needed
 // 2026-03-30  Clarify coding standards rules 3 and 7 (expanded body, brace placement)
 // 2026-03-30  Expand collapsed touch function bodies to comply with rules 3 and 7
+// 2026-03-30  Conform to coding standard rule 7 — expand all collapsed if/else bodies
 // =============================================================================
 
 // =============================================================================
@@ -296,11 +297,17 @@ function randomTile(allowEquals = true)
   let weightEquals = allowEquals ? (1 - TILE_WEIGHT_DIGIT - TILE_WEIGHT_PLUS - TILE_WEIGHT_MINUS) : 0;
   let total = TILE_WEIGHT_DIGIT + TILE_WEIGHT_PLUS + TILE_WEIGHT_MINUS + weightEquals;
   let r = random() * total;
-  if (r < TILE_WEIGHT_DIGIT) { return str(floor(random(10))); }
+  if (r < TILE_WEIGHT_DIGIT) {
+    return str(floor(random(10)));
+  }
   r -= TILE_WEIGHT_DIGIT;
-  if (r < TILE_WEIGHT_PLUS) { return '+'; }
+  if (r < TILE_WEIGHT_PLUS) {
+    return '+';
+  }
   r -= TILE_WEIGHT_PLUS;
-  if (r < TILE_WEIGHT_MINUS) { return '-'; }
+  if (r < TILE_WEIGHT_MINUS) {
+    return '-';
+  }
   return '=';
 }  // function randomTile(allowEquals = true)
 
@@ -445,7 +452,9 @@ function drawScoringArea(g)
 
 function drawSelectionOutline()
 {
-  if (!selActive || !selStartCell || !selEndCell) { return; }
+  if (!selActive || !selStartCell || !selEndCell) {
+    return;
+  }
 
   let start = mainTilePos(selStartCell.row, selStartCell.col);
   let end   = mainTilePos(selEndCell.row, selEndCell.col);
@@ -466,7 +475,9 @@ function drawSelectionOutline()
 
 function drawDraggingTile()
 {
-  if (!extraDrag) { return; }
+  if (!extraDrag) {
+    return;
+  }
 
   let ts = L.tileSize;
   let x, y;
@@ -549,7 +560,9 @@ function mouseDragged()
     return;
   }
 
-  if (!selActive || !selStartCell) { return; }
+  if (!selActive || !selStartCell) {
+    return;
+  }
   let mc = mainCell(mouseX, mouseY);
   if (mc) {
     // Only extend if same axis
@@ -644,14 +657,18 @@ function commitSelection()
   if (scores.some(e =>
     e.startRow === normStart.row && e.startCol === normStart.col &&
     e.endRow   === normEnd.row   && e.endCol   === normEnd.col
-  )) { return; }
+  )) {
+    return;
+  }
 
   let cells = cellsInRange(normStart, normEnd);
   let raw = cells.map(c => grid[c.row][c.col].value).join('');
   let display = raw;
   let normalized = normalizeEquation(raw);
   // Silently discard if not exactly one '='
-  if ((normalized.match(/=/g) || []).length !== 1) { return; }
+  if ((normalized.match(/=/g) || []).length !== 1) {
+    return;
+  }
   let valid = isValidEquation(normalized);
   let pts = valid ? cells.length * cells.length : 0;
 
@@ -735,13 +752,19 @@ function isValidEquation(expr)
 {
   // Must contain exactly one '='
   let parts = expr.split('=');
-  if (parts.length !== 2) { return false; }
+  if (parts.length !== 2) {
+    return false;
+  }
   let [left, right] = parts;
-  if (!left || !right) { return false; }
+  if (!left || !right) {
+    return false;
+  }
 
   let lVal = safeEval(left);
   let rVal = safeEval(right);
-  if (lVal === null || rVal === null) { return false; }
+  if (lVal === null || rVal === null) {
+    return false;
+  }
   return lVal === rVal;
 }  // function isValidEquation(expr)
 
@@ -762,11 +785,15 @@ function collapseSigns(expr)
 function safeEval(expr)
 {
   // Whitelist: only digits, +, and - allowed
-  if (!/^[0-9+\-]+$/.test(expr)) { return null; }
+  if (!/^[0-9+\-]+$/.test(expr)) {
+    return null;
+  }
   expr = collapseSigns(expr);
   try {
     let result = eval(expr);
-    if (typeof result !== 'number' || !isFinite(result)) { return null; }
+    if (typeof result !== 'number' || !isFinite(result)) {
+      return null;
+    }
     return result;
   } catch(e) {
     return null;
