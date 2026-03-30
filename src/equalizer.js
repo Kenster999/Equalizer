@@ -677,7 +677,7 @@ function recomputeValidUseCounts() {
       }
     }
   }
-}
+}  // function recomputeValidUseCounts()
 
 // =============================================================================
 // EQUATION LOGIC
@@ -712,7 +712,7 @@ function collapseSigns(expr) {
                .replace(/-\+/g, '-');
   } while (expr !== prev);
   return expr;
-}
+}  // function collapseSigns(expr)
 
 
 function safeEval(expr) {
