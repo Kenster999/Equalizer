@@ -24,6 +24,7 @@
 // 2026-03-19  Added coding standards rules 5 and 6 to coding-standards.md
 // 2026-03-19  Conform to coding standards rules 1, 2, and 5
 // 2026-03-29  Test commit from macOS Claude app
+// 2026-03-29  Conform to coding standard rule 4 (closing brace comments)
 // =============================================================================
 
 // =============================================================================
@@ -685,7 +686,7 @@ function recomputeValidUseCounts() {
 function normalizeEquation(expr) {
   // Collapse consecutive '=' signs into one
   return expr.replace(/=+/g, '=');
-}
+}  // function normalizeEquation(expr)
 
 
 function isValidEquation(expr) {
@@ -699,7 +700,7 @@ function isValidEquation(expr) {
   let rVal = safeEval(right);
   if (lVal === null || rVal === null) { return false; }
   return lVal === rVal;
-}
+}  // function isValidEquation(expr)
 
 
 function collapseSigns(expr) {
@@ -725,7 +726,7 @@ function safeEval(expr) {
   } catch(e) {
     return null;
   }
-}
+}  // function safeEval(expr)
 
 // =============================================================================
 // COORDINATE HELPERS
@@ -735,14 +736,14 @@ function extrasTilePos(row, col) {
   let x = L.extrasOffsetX + col * (L.tileSize + L.gap);
   let y = L.margin + row * (L.tileSize + L.gap);
   return { x, y };
-}
+}  // function extrasTilePos(row, col)
 
 
 function mainTilePos(row, col) {
   let x = L.mainOffsetX + col * (L.tileSize + L.gap);
   let y = L.mainOffsetY + row * (L.tileSize + L.gap);
   return { x, y };
-}
+}  // function mainTilePos(row, col)
 
 
 function extrasCell(mx, my) {
@@ -756,7 +757,7 @@ function extrasCell(mx, my) {
     }
   }
   return null;
-}
+}  // function extrasCell(mx, my)
 
 
 function mainCell(mx, my) {
@@ -770,7 +771,7 @@ function mainCell(mx, my) {
     }
   }
   return null;
-}
+}  // function mainCell(mx, my)
 
 
 function cellsInRange(start, end) {
@@ -788,6 +789,6 @@ function cellsInRange(start, end) {
     for (let r = r0; r <= r1; r++) cells.push({ row: r, col: c0 });
   }
   return cells;
-}
+}  // function cellsInRange(start, end)
 
 
