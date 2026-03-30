@@ -26,6 +26,7 @@
 // 2026-03-29  Test commit from macOS Claude app
 // 2026-03-29  Conform to coding standard rule 4 (closing brace comments)
 // 2026-03-29  fix: use raw.githubusercontent.com for all file URLs
+// 2026-03-30  fix: use GitHub Contents API URLs for file-index.md and equalizer.js in Chat session startup
 // =============================================================================
 
 // =============================================================================
