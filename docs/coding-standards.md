@@ -59,7 +59,9 @@ Group related code together using comment headers. Within each group:
 - Constants and non-function declarations come first, in alphabetical order where possible
 - Functions follow, in alphabetical order
 
-Put exactly 3 blank lines before each group header comment.
+Put exactly 3 blank lines both before AND after each group header comment. This
+means the last function before a header and the first function (or declaration)
+after a header are each separated from the header by 3 blank lines.
 
 Example:
 ```javascript
@@ -68,7 +70,11 @@ Example:
 
 
 // --- Next Group ---
+
+
+
 const SOME_CONSTANT = 1;
+
 
 function aFunc()
 {

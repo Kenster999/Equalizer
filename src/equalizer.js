@@ -35,6 +35,7 @@
 // 2026-03-30  Clarify coding standards rules 3 and 7 (expanded body, brace placement)
 // 2026-03-30  Expand collapsed touch function bodies to comply with rules 3 and 7
 // 2026-03-30  Conform to coding standard rule 7 — expand all collapsed if/else bodies
+// 2026-03-30  Clarify coding standard rule 6 — 3 blank lines before AND after group headers
 // =============================================================================
 
 // =============================================================================
