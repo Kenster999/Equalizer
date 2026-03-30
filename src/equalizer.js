@@ -30,6 +30,7 @@
 // 2026-03-30  Add coding standard rule 7 (K&R brace style for if/else)
 // 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 1 of 3
 // 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 2 of 3
+// 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 3 of 3
 // =============================================================================
 
 // =============================================================================
@@ -659,7 +660,8 @@ function commitSelection()
 }  // function commitSelection()
 
 
-function reEvaluateScoresAt(row, col) {
+function reEvaluateScoresAt(row, col)
+{
   totalPoints = 0;
   for (let entry of scores) {
     let cells = cellsInRange(
@@ -684,7 +686,8 @@ function reEvaluateScoresAt(row, col) {
 }  // function reEvaluateScoresAt(row, col)
 
 
-function recomputeValidUseCounts() {
+function recomputeValidUseCounts()
+{
   // Reset all tile validUseCount to 0
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
@@ -709,13 +712,15 @@ function recomputeValidUseCounts() {
 // EQUATION LOGIC
 // =============================================================================
 
-function normalizeEquation(expr) {
+function normalizeEquation(expr)
+{
   // Collapse consecutive '=' signs into one
   return expr.replace(/=+/g, '=');
 }  // function normalizeEquation(expr)
 
 
-function isValidEquation(expr) {
+function isValidEquation(expr)
+{
   // Must contain exactly one '='
   let parts = expr.split('=');
   if (parts.length !== 2) { return false; }
@@ -729,7 +734,8 @@ function isValidEquation(expr) {
 }  // function isValidEquation(expr)
 
 
-function collapseSigns(expr) {
+function collapseSigns(expr)
+{
   let prev;
   do {
     prev = expr;
@@ -741,7 +747,8 @@ function collapseSigns(expr) {
 }  // function collapseSigns(expr)
 
 
-function safeEval(expr) {
+function safeEval(expr)
+{
   // Whitelist: only digits, +, and - allowed
   if (!/^[0-9+\-]+$/.test(expr)) { return null; }
   expr = collapseSigns(expr);
@@ -758,21 +765,24 @@ function safeEval(expr) {
 // COORDINATE HELPERS
 // =============================================================================
 
-function extrasTilePos(row, col) {
+function extrasTilePos(row, col)
+{
   let x = L.extrasOffsetX + col * (L.tileSize + L.gap);
   let y = L.margin + row * (L.tileSize + L.gap);
   return { x, y };
 }  // function extrasTilePos(row, col)
 
 
-function mainTilePos(row, col) {
+function mainTilePos(row, col)
+{
   let x = L.mainOffsetX + col * (L.tileSize + L.gap);
   let y = L.mainOffsetY + row * (L.tileSize + L.gap);
   return { x, y };
 }  // function mainTilePos(row, col)
 
 
-function extrasCell(mx, my) {
+function extrasCell(mx, my)
+{
   for (let r = 0; r < EXTRAS_ROWS; r++) {
     for (let c = 0; c < EXTRA_COLS; c++) {
       let pos = extrasTilePos(r, c);
@@ -786,7 +796,8 @@ function extrasCell(mx, my) {
 }  // function extrasCell(mx, my)
 
 
-function mainCell(mx, my) {
+function mainCell(mx, my)
+{
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       let pos = mainTilePos(r, c);
@@ -800,7 +811,8 @@ function mainCell(mx, my) {
 }  // function mainCell(mx, my)
 
 
-function cellsInRange(start, end) {
+function cellsInRange(start, end)
+{
   let cells = [];
   let r0 = min(start.row, end.row);
   let r1 = max(start.row, end.row);
