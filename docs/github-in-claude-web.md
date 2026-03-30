@@ -14,7 +14,7 @@
 Use jsDelivr — it mirrors GitHub and is accessible from Claude Chat, but only if the user pastes the URL directly into the conversation:
 
 ```
-https://cdn.jsdelivr.net/gh/Kenster999/Equalizer@main/docs/github-in-claude-web.md
+https://raw.githubusercontent.com/Kenster999/Equalizer/main/docs/github-in-claude-web.md
 ```
 
 General pattern:

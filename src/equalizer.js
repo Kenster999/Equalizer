@@ -25,6 +25,7 @@
 // 2026-03-19  Conform to coding standards rules 1, 2, and 5
 // 2026-03-29  Test commit from macOS Claude app
 // 2026-03-29  Conform to coding standard rule 4 (closing brace comments)
+// 2026-03-29  fix: use raw.githubusercontent.com for all file URLs
 // =============================================================================
 
 // =============================================================================
