@@ -144,7 +144,7 @@ function setup() {
   computeLayout();
   staticCanvas = createGraphics(width, height);
   initGame();
-}
+}  // function setup()
 
 
 function draw() {
@@ -158,7 +158,7 @@ function draw() {
   // Dynamic layer: selection outline + dragging tile
   drawSelectionOutline();
   drawDraggingTile();
-}
+}  // function draw()
 
 
 function windowResized() {
@@ -166,7 +166,7 @@ function windowResized() {
   computeLayout();
   staticCanvas.resizeCanvas(width, height);
   needsRedraw = true;
-}
+}  // function windowResized()
 
 // =============================================================================
 // LAYOUT COMPUTATION
@@ -241,7 +241,7 @@ function computeLayout() {
     availW,
     entryFontSize, totalFontSize, entryHeight,
   };
-}
+}  // function computeLayout()
 
 // =============================================================================
 // GAME INIT
@@ -273,7 +273,7 @@ function initGame() {
   selEndCell = null;
   extraDrag = null;
   needsRedraw = true;
-}
+}  // function initGame()
 
 
 function randomTile(allowEquals = true) {
@@ -286,7 +286,7 @@ function randomTile(allowEquals = true) {
   r -= TILE_WEIGHT_PLUS;
   if (r < TILE_WEIGHT_MINUS) { return '-'; }
   return '=';
-}
+}  // function randomTile(allowEquals = true)
 
 // =============================================================================
 // STATIC CANVAS DRAW
@@ -301,7 +301,7 @@ function drawStatic() {
   drawDivider(g);
   drawMainArea(g);
   drawScoringArea(g);
-}
+}  // function drawStatic()
 
 
 // --- EXTRAS AREA ---
@@ -329,7 +329,7 @@ function drawExtrasArea(g) {
       }
     }
   }
-}
+}  // function drawExtrasArea(g)
 
 
 // --- DASHED DIVIDER ---
@@ -339,7 +339,7 @@ function drawDivider(g) {
   g.drawingContext.setLineDash([DIVIDER_DASH_ON, DIVIDER_DASH_OFF]);
   g.line(0, L.dividerY, width - L.scoringW - L.margin, L.dividerY);
   g.drawingContext.setLineDash([]);
-}
+}  // function drawDivider(g)
 
 
 // --- MAIN AREA ---
@@ -355,7 +355,7 @@ function drawMainArea(g) {
       drawTileAt(g, pos.x, pos.y, tile.value, tile.validUseCount, true);
     }
   }
-}
+}  // function drawMainArea(g)
 
 
 // --- DRAW A SINGLE TILE ---
@@ -379,7 +379,7 @@ function drawTileAt(g, x, y, value, validUseCount, showGreen) {
   g.textSize(ts * TILE_TEXT_SIZE_RATIO);
   g.textStyle(BOLD);
   g.text(value, x + ts / 2, y + ts / 2);
-}
+}  // function drawTileAt(g, x, y, value, validUseCount, showGreen)
 
 
 // --- SCORING AREA ---
