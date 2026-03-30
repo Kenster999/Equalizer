@@ -32,6 +32,7 @@
 // 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 2 of 3
 // 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 3 of 3
 // 2026-03-30  Verify coding standard rule 2 (trailing newlines) — already compliant, no change needed
+// 2026-03-30  Clarify coding standards rules 3 and 7 (expanded body, brace placement)
 // =============================================================================
 
 // =============================================================================

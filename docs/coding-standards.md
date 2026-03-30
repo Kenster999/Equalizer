@@ -11,9 +11,34 @@ Put two blank lines between top-level functions. This does not apply inside clas
 All source files must end with exactly 3 newline characters: one closing the last line of code, plus two more. This results in two blank lines visible at EOF.
 
 ### 3. Allman Style for Top-Level Named Blocks
-Place the opening brace for `function` and `class` declarations on the line following the declaration.
+Place the opening brace for `function` and `class` declarations on its own line,
+immediately after the declaration line, with nothing else on that line. The closing
+`}` also goes on its own line (followed only by the Rule 4 closing brace comment).
+The function body is always expanded: one statement per line, indented — never
+collapsed onto the same line as either brace.
 
-Not applied automatically to other block types (e.g. `if`, `for`, `try`), except manually when blocks are deeply nested.
+Not applied to other block types (e.g. `if`, `for`, `try`) — see Rules 5 and 7.
+
+Correct:
+```javascript
+function someFunc(a, b)
+{
+  doSomething();
+  return result;
+}  // function someFunc(a, b)
+```
+
+Incorrect:
+```javascript
+// Opening brace on declaration line:
+function someFunc(a, b) {
+  doSomething();
+}  // function someFunc(a, b)
+
+// Body collapsed onto brace line:
+function someFunc(a, b)
+{ doSomething(); return result; }  // function someFunc(a, b)
+```
 
 ### 4. Closing Brace Comment
 Each function must have a comment immediately after its closing `}`, separated by two spaces, repeating the function signature. If the declaration spans multiple lines, concatenate it into a single line for the comment.
@@ -59,9 +84,10 @@ function bFunc()
 
 ### 7. Brace Style for If/Else
 For `if`, `else if`, and `else` blocks, place the opening brace at the end of the
-keyword line (K&R style), not on a new line. The closing brace goes on its own line.
-This applies even when the block contains only one statement — no single-line
-collapsed forms are permitted.
+keyword line (K&R style). Nothing else appears on that line after the `{`. The
+closing `}` goes on its own line. The block body is always expanded: one statement
+per line, indented — never collapsed onto the same line as either brace. This
+applies even when the block contains only one statement.
 
 Correct:
 ```javascript
@@ -80,10 +106,16 @@ if (!valid) {
 
 Incorrect:
 ```javascript
+// Body collapsed onto opening brace line:
 if (x > 0) { return x; }
 
+// Opening brace on its own line (Allman — wrong for if/else):
 if (x > 0)
 {
   return x;
 }
+
+// Body collapsed onto closing brace line:
+if (x > 0) {
+  return x; }
 ```
