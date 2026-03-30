@@ -29,6 +29,7 @@
 // 2026-03-30  fix: use GitHub Contents API URLs for file-index.md and equalizer.js in Chat session startup
 // 2026-03-30  Add coding standard rule 7 (K&R brace style for if/else)
 // 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 1 of 3
+// 2026-03-30  Conform to coding standard rule 3 (Allman style) — batch 2 of 3
 // =============================================================================
 
 // =============================================================================
@@ -374,7 +375,8 @@ function drawMainArea(g)
 
 
 // --- DRAW A SINGLE TILE ---
-function drawTileAt(g, x, y, value, validUseCount, showGreen) {
+function drawTileAt(g, x, y, value, validUseCount, showGreen)
+{
   let ts = L.tileSize;
   let bgColor = TILE_BG_DEFAULT;
 
@@ -398,7 +400,8 @@ function drawTileAt(g, x, y, value, validUseCount, showGreen) {
 
 
 // --- SCORING AREA ---
-function drawScoringArea(g) {
+function drawScoringArea(g)
+{
   let { scoringX, scoringY, scoringH, scoringW } = L;
 
   g.fill(SCORING_BG_COLOR);
@@ -436,7 +439,8 @@ function drawScoringArea(g) {
 // DYNAMIC LAYER
 // =============================================================================
 
-function drawSelectionOutline() {
+function drawSelectionOutline()
+{
   if (!selActive || !selStartCell || !selEndCell) { return; }
 
   let start = mainTilePos(selStartCell.row, selStartCell.col);
@@ -456,7 +460,8 @@ function drawSelectionOutline() {
 }  // function drawSelectionOutline()
 
 
-function drawDraggingTile() {
+function drawDraggingTile()
+{
   if (!extraDrag) { return; }
 
   let ts = L.tileSize;
@@ -497,7 +502,8 @@ function drawDraggingTile() {
 // INPUT
 // =============================================================================
 
-function mousePressed() {
+function mousePressed()
+{
   // Check extras area for drag start
   let ec = extrasCell(mouseX, mouseY);
   if (ec && !extras[ec.row][ec.col].used) {
@@ -531,7 +537,8 @@ function mousePressed() {
 }  // function mousePressed()
 
 
-function mouseDragged() {
+function mouseDragged()
+{
   if (extraDrag && !extraDrag.snapback) {
     extraDrag.fingerX = mouseX - extraDrag.offsetX;
     extraDrag.fingerY = mouseY - extraDrag.offsetY;
@@ -552,7 +559,8 @@ function mouseDragged() {
 }  // function mouseDragged()
 
 
-function mouseReleased() {
+function mouseReleased()
+{
   // Handle extra tile drop
   if (extraDrag && !extraDrag.snapback) {
     let mc = mainCell(mouseX, mouseY);
@@ -598,19 +606,23 @@ function mouseReleased() {
 
 
 // Touch support
-function touchStarted() { mousePressed(); return false; }  // function touchStarted()
+function touchStarted()
+{ mousePressed(); return false; }  // function touchStarted()
 
 
-function touchMoved()   { mouseDragged(); return false; }  // function touchMoved()
+function touchMoved()
+{ mouseDragged(); return false; }  // function touchMoved()
 
 
-function touchEnded()   { mouseReleased(); return false; }  // function touchEnded()
+function touchEnded()
+{ mouseReleased(); return false; }  // function touchEnded()
 
 // =============================================================================
 // SELECTION & EVALUATION
 // =============================================================================
 
-function commitSelection() {
+function commitSelection()
+{
   // Normalize range to ascending row/col
   let normStart = { row: min(selStartCell.row, selEndCell.row), col: min(selStartCell.col, selEndCell.col) };
   let normEnd   = { row: max(selStartCell.row, selEndCell.row), col: max(selStartCell.col, selEndCell.col) };
