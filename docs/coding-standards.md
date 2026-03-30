@@ -56,3 +56,34 @@ function bFunc()
   // ...
 }  // function bFunc()
 ```
+
+### 7. Brace Style for If/Else
+For `if`, `else if`, and `else` blocks, place the opening brace at the end of the
+keyword line (K&R style), not on a new line. The closing brace goes on its own line.
+This applies even when the block contains only one statement — no single-line
+collapsed forms are permitted.
+
+Correct:
+```javascript
+if (x > 0) {
+  return x;
+}
+
+if (!valid) {
+  return null;
+} else if (x === 0) {
+  doSomething();
+} else {
+  return -1;
+}
+```
+
+Incorrect:
+```javascript
+if (x > 0) { return x; }
+
+if (x > 0)
+{
+  return x;
+}
+```
